@@ -152,7 +152,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                     text = "¿Olvidaste tu contraseña?\n¡Regístrate!",
                     fontSize = 11.sp,
                     color = Color.Gray,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center //esto es una prueba
                 )
             }
         }
