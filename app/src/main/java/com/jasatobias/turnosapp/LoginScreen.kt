@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -14,13 +15,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+import com.jasatobias.turnosapp.data.auth.AuthRepository
+
 import com.jasatobias.turnosapp.ui.theme.NavyBackground
 import com.jasatobias.turnosapp.ui.theme.RoyalBlue
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(onLoginSuccess: () -> Unit) {
-    var username by remember { mutableStateOf("Jiara Martins") }
-    var password by remember { mutableStateOf("******") }
+
+    val authRepository = remember {
+        AuthRepository()
+    }
+
+    var email by remember {
+        mutableStateOf("")
+    }
+
+    var password by remember {
+        mutableStateOf("")
+    }
+
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
+
+    var errorMessage by remember {
+        mutableStateOf<String?>(null)
+    }
+
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -75,18 +100,21 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Campo Nombre / Usuario
+                // Campo Correo Electrónico
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "NOMBRE",
+                        text = "CORREO",
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Gray
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     OutlinedTextField(
-                        value = username,
-                        onValueChange = { username = it },
+                        value = email,
+                        onValueChange = {
+                            email = it
+                            errorMessage = null
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -112,7 +140,10 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                     Spacer(modifier = Modifier.height(4.dp))
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = {
+                            password = it
+                            errorMessage = null
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         visualTransformation = PasswordVisualTransformation(),
@@ -126,23 +157,70 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                     )
                 }
 
+                errorMessage?.let { message ->
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = message,
+                        color = Color.Red,
+                        fontSize = 12.sp
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Botón Ingresar
                 Button(
-                    onClick = { onLoginSuccess() },
+                    onClick = {
+
+                        if (email.isBlank() || password.isBlank()) {
+                            errorMessage = "Completa todos los campos"
+                            return@Button
+                        }
+
+                        scope.launch {
+
+                            isLoading = true
+                            errorMessage = null
+
+                            val result = authRepository.login(
+                                email = email.trim(),
+                                password = password
+                            )
+
+                            isLoading = false
+
+                            result
+                                .onSuccess {
+                                    onLoginSuccess()
+                                }
+                                .onFailure {
+                                    errorMessage = "Correo o contraseña incorrectos"
+                                }
+                        }
+                    },
+
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
                 ) {
-                    Text(
-                        text = "Ingresar",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(22.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            text = "Ingresar",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
