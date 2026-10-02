@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "69703607793",
+    "project_id": "kynex-596a1",
+    "storage_bucket": "kynex-596a1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69703607793:android:2ca7d36de485936bc91050",
+        "android_client_info": {
+          "package_name": "com.jasatobias.turnosapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCftYkqM-stp87yWWdvpVlX1qdy_aFb2jo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
