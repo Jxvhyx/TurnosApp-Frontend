@@ -23,7 +23,10 @@ import com.jasatobias.turnosapp.ui.theme.RoyalBlue
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit) {
+fun LoginScreen(
+    onLoginSuccess: () -> Unit,
+    onRegisterClick: () -> Unit
+) {
 
     val authRepository = remember {
         AuthRepository()
@@ -226,12 +229,14 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Enlaces inferiores
-                Text(
-                    text = "¿Olvidaste tu contraseña?\n¡Regístrate!",
-                    fontSize = 11.sp,
-                    color = Color.Gray,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center //esto es una prueba
-                )
+                TextButton(
+                    onClick = onRegisterClick
+                ) {
+                    Text(
+                        text = "¡Regístrate!",
+                        color = RoyalBlue
+                    )
+                }
             }
         }
     }

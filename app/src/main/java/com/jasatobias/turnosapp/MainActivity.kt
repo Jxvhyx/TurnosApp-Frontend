@@ -19,12 +19,43 @@ class MainActivity : ComponentActivity() {
         setContent {
             TurnosAppTheme {
                 var isLoggedIn by remember { mutableStateOf(false) }
+                var showRegister by remember { mutableStateOf(false) }
+                var showProviderProfile by remember { mutableStateOf(false) }
                 var currentTab by remember { mutableStateOf("home") }
 
                 if (!isLoggedIn) {
-                    LoginScreen(onLoginSuccess = {
-                        isLoggedIn = true
-                    })
+
+                    if (showProviderProfile) {
+                        ProviderProfileScreen(
+                            onProfileSaved = {
+                                showProviderProfile = false
+                                isLoggedIn = true
+                            }
+                        )
+                    } else if (showRegister) {
+                        RegisterScreen(
+                            onRegisterSuccess = { role ->
+                                if (role == "provider") {
+                                    showProviderProfile = true
+                                } else {
+                                    isLoggedIn = true
+                                }
+                            },
+                            onBackToLogin = {
+                                showRegister = false
+                            }
+                        )
+                    } else {
+                        LoginScreen(
+                            onLoginSuccess = {
+                                isLoggedIn = true
+                            },
+                            onRegisterClick = {
+                                showRegister = true
+                            }
+                        )
+                    }
+
                 } else {
                     Scaffold(
                         bottomBar = {
