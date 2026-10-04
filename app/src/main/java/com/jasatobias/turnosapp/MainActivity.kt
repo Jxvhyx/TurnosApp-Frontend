@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+
+import com.jasatobias.turnosapp.data.auth.AuthRepository
+
 import com.jasatobias.turnosapp.ui.theme.TurnosAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,9 +21,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TurnosAppTheme {
-                var isLoggedIn by remember { mutableStateOf(false) }
+                val authRepository = remember { AuthRepository() }
+                var isLoggedIn by remember { mutableStateOf(authRepository.isUserLoggedIn()) }
+
                 var showRegister by remember { mutableStateOf(false) }
                 var showProviderProfile by remember { mutableStateOf(false) }
+                var showEditProviderProfile by remember { mutableStateOf(false) }
                 var currentTab by remember { mutableStateOf("home") }
 
                 if (!isLoggedIn) {
@@ -57,6 +63,13 @@ class MainActivity : ComponentActivity() {
                     }
 
                 } else {
+                    if (showEditProviderProfile) {
+                        ProviderProfileScreen(
+                            onProfileSaved = {
+                                showEditProviderProfile = false
+                            }
+                        )
+                    } else {
                     Scaffold(
                         bottomBar = {
                             NavigationBar(
@@ -85,7 +98,16 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         Box(modifier = Modifier.padding(innerPadding)) {
                             when (currentTab) {
-                                "home" -> HomeScreenGeneral(onNavigateToTab = { tab -> currentTab = tab })
+                                "home" -> HomeScreenGeneral(onNavigateToTab = {
+                                    tab -> currentTab = tab
+                                },
+                                    onLogout = {
+                                        isLoggedIn = false
+                                },
+                                    onEditProviderProfile = {
+                                        showEditProviderProfile = true
+                                }
+                                )
                                 "book" -> BookingScreen(onBookingSuccess = { currentTab = "tickets" })
                                 "tickets" -> MyTicketsScreen()
                             }
@@ -95,4 +117,5 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
 }

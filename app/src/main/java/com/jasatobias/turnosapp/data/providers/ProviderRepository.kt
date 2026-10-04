@@ -36,4 +36,25 @@ class ProviderRepository {
             Result.failure(e)
         }
     }
+
+    suspend fun getProvider(
+        userId: String
+    ): Result<Map<String, Any>> {
+        return try {
+            val document = firestore
+                .collection("Providers")
+                .document(userId)
+                .get()
+                .await()
+
+            if (!document.exists()) {
+                throw Exception("No se encontró la información del proveedor")
+            }
+
+            Result.success(document.data ?: emptyMap())
+
+        } catch (e: Exception){
+            Result.failure(e)
+        }
+    }
 }

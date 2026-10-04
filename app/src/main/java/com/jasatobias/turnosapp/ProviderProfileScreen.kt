@@ -38,8 +38,52 @@ fun ProviderProfileScreen(
     var city by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
 
-    var isLoading by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    val uid = auth.currentUser?.uid
+
+    LaunchedEffect(uid) {
+
+        if (uid == null) {
+
+            errorMessage = "No se encontró el usuario"
+            isLoading = false
+
+            return@LaunchedEffect
+        }
+
+        val result = providerRepository.getProvider(uid)
+
+        result
+            .onSuccess { data ->
+
+                businessName =
+                    data["businessName"] as? String ?: ""
+
+                category =
+                    data["category"] as? String ?: ""
+
+                description =
+                    data["description"] as? String ?: ""
+
+                city =
+                    data["city"] as? String ?: ""
+
+                address =
+                    data["address"] as? String ?: ""
+
+                isLoading = false
+            }
+            .onFailure { error ->
+
+                errorMessage =
+                    error.message
+                        ?: "No se pudo cargar el perfil"
+
+                isLoading = false
+            }
+    }
 
     Column(
         modifier = Modifier
@@ -64,7 +108,7 @@ fun ProviderProfileScreen(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Text(
-                    text = "Completa tu perfil",
+                    text = "Perfil del negocio",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = NavyBackground
@@ -160,8 +204,6 @@ fun ProviderProfileScreen(
                             return@Button
                         }
 
-                        val uid = auth.currentUser?.uid
-
                         if (uid == null) {
                             errorMessage = "No se encontró el usuario"
                             return@Button
@@ -205,15 +247,12 @@ fun ProviderProfileScreen(
                 ) {
 
                     if (isLoading) {
-
                         CircularProgressIndicator(
                             modifier = Modifier.size(22.dp),
                             color = Color.White,
                             strokeWidth = 2.dp
                         )
-
                     } else {
-
                         Text(
                             text = "Guardar perfil",
                             fontSize = 14.sp,
