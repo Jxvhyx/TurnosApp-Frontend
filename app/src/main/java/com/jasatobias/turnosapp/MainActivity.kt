@@ -142,13 +142,6 @@ class MainActivity : ComponentActivity() {
                             }
                         )
 
-                    } else if (showEditProviderProfile) {
-
-                        ProviderProfileScreen(
-                            onProfileSaved = {
-                                showEditProviderProfile = false
-                            }
-                        )
                     }
                     else {
                         Scaffold(
@@ -185,6 +178,14 @@ class MainActivity : ComponentActivity() {
                                         },
                                         onLogout = {
                                             isLoggedIn = false
+                                            showRegister = false
+                                            showProviderProfile = false
+                                            showEditProviderProfile = false
+                                            showCreateService = false
+                                            showProviderServices = false
+                                            showEditService = false
+                                            selectedService = null
+                                            currentTab = "home"
                                         },
                                         onEditProviderProfile = {
                                             showEditProviderProfile = true

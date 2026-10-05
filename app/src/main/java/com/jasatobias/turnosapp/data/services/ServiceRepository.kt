@@ -18,7 +18,10 @@ class ServiceRepository {
                 "providerId" to providerId,
                 "name" to name,
                 "description" to description,
-                "duration" to duration
+                "duration" to duration,
+                "available" to true,
+                "createdAt" to com.google.firebase.Timestamp.now(),
+                "updatedAt" to com.google.firebase.Timestamp.now()
             )
 
             firestore
@@ -67,7 +70,8 @@ class ServiceRepository {
             val serviceData = hashMapOf<String, Any>(
                 "name" to name,
                 "description" to description,
-                "duration" to duration
+                "duration" to duration,
+                "updatedAt" to com.google.firebase.Timestamp.now()
             )
 
             firestore
@@ -77,6 +81,46 @@ class ServiceRepository {
                 .await()
 
             Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateServiceAvailability(
+        serviceId: String,
+        available: Boolean
+    ): Result<Unit> {
+        return try {
+            val serviceData = hashMapOf<String, Any>(
+                "available" to available,
+                "updatedAt" to com.google.firebase.Timestamp.now()
+            )
+
+            firestore
+                .collection("Services")
+                .document(serviceId)
+                .update(serviceData)
+                .await()
+
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteService(
+        serviceId: String
+    ): Result<Unit> {
+        return try {
+            firestore
+                .collection("Services")
+                .document(serviceId)
+                .delete()
+                .await()
+
+            Result.success(Unit)
+
         } catch (e: Exception) {
             Result.failure(e)
         }
