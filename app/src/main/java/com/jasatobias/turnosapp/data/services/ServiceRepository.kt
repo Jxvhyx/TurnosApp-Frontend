@@ -60,6 +60,57 @@ class ServiceRepository {
         }
     }
 
+    suspend fun getService(
+        serviceId: String
+    ): Result<Map<String, Any>> {
+        return try {
+            val document = firestore
+                .collection("Services")
+                .document(serviceId)
+                .get()
+                .await()
+
+            if (!document.exists()) {
+                throw Exception("No se encontró el servicio")
+            }
+
+            val data = document.data?.toMutableMap() ?: mutableMapOf()
+            data["id"] = document.id
+
+            Result.success(data)
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getAvailableServices(): Result<List<Map<String, Any>>> {
+        return try {
+
+            val snapshot = firestore
+                .collection("Services")
+                .whereEqualTo("available", true)
+                .get()
+                .await()
+
+            val services = snapshot.documents.map { document ->
+
+                val data =
+                    document.data?.toMutableMap()
+                        ?: mutableMapOf()
+
+                data["id"] = document.id
+
+                data
+            }
+
+            Result.success(services)
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun updateService(
         serviceId: String,
         name: String,

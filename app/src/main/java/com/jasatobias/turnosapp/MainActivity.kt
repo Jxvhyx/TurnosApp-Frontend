@@ -11,12 +11,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 
 import com.jasatobias.turnosapp.data.auth.AuthRepository
-import com.jasatobias.turnosapp.ui.BookingScreen
+import com.jasatobias.turnosapp.data.users.UserRepository
 import com.jasatobias.turnosapp.ui.HomeScreenGeneral
 import com.jasatobias.turnosapp.ui.auth.LoginScreen
 import com.jasatobias.turnosapp.ui.MyTicketsScreen
 import com.jasatobias.turnosapp.ui.auth.ProviderProfileScreen
 import com.jasatobias.turnosapp.ui.auth.RegisterScreen
+import com.jasatobias.turnosapp.ui.client.ClientServicesScreen
+import com.jasatobias.turnosapp.ui.client.ServiceDetailScreen
 import com.jasatobias.turnosapp.ui.services.CreateServiceScreen
 import com.jasatobias.turnosapp.ui.services.EditServiceScreen
 import com.jasatobias.turnosapp.ui.services.ProviderServicesScreen
@@ -32,6 +34,9 @@ class MainActivity : ComponentActivity() {
                 val authRepository = remember { AuthRepository() }
                 var isLoggedIn by remember { mutableStateOf(authRepository.isUserLoggedIn()) }
 
+                val userRepository = remember { UserRepository() }
+                var currentUserRole by remember { mutableStateOf<String?>(null) }
+
                 var showRegister by remember { mutableStateOf(false) }
                 var showProviderProfile by remember { mutableStateOf(false) }
                 var showEditProviderProfile by remember { mutableStateOf(false) }
@@ -39,9 +44,27 @@ class MainActivity : ComponentActivity() {
                 var showProviderServices by remember { mutableStateOf(false) }
                 var showEditService by remember { mutableStateOf(false) }
                 var selectedService by remember { mutableStateOf<Map<String, Any>?>(null) }
+                var showClientServices by remember { mutableStateOf(false) }
+                var showServiceDetail by remember { mutableStateOf(false) }
+                var selectedServiceId by remember { mutableStateOf<String?>(null) }
 
                 var currentTab by remember { mutableStateOf("home") }
                 var servicesRefreshKey by remember { mutableIntStateOf(0) }
+
+                LaunchedEffect(isLoggedIn) {
+                    if (isLoggedIn) {
+                        userRepository
+                            .getCurrentUser()
+                            .onSuccess { userData ->
+                                currentUserRole = userData["role"] as? String
+                            }
+                            .onFailure {
+                                currentUserRole = null
+                            }
+                    } else {
+                        currentUserRole = null
+                    }
+                }
 
                 if (!isLoggedIn) {
 
@@ -106,7 +129,7 @@ class MainActivity : ComponentActivity() {
                                 serviceId = service["id"] as? String ?: "",
                                 currentName = service["name"] as? String ?: "",
                                 currentDescription = service["description"] as? String ?: "",
-                                currentDuration = service["duration"] as? Long ?: 0L,
+                                currentDuration = (service["duration"] as? Number)?.toLong() ?: 0L,
 
                                 onServiceUpdated = {
                                     showEditService = false
@@ -142,6 +165,20 @@ class MainActivity : ComponentActivity() {
                             }
                         )
 
+                    } else if (showServiceDetail){
+                        val serviceId = selectedServiceId
+
+                        if (serviceId != null) {
+                            ServiceDetailScreen(
+                                serviceId = serviceId,
+                                onBack = {
+                                    showServiceDetail = false
+                                    selectedServiceId = null
+                                    showClientServices = true
+                                },
+                                onBookService = {}
+                            )
+                        }
                     }
                     else {
                         Scaffold(
@@ -157,9 +194,21 @@ class MainActivity : ComponentActivity() {
                                     )
                                     NavigationBarItem(
                                         selected = currentTab == "book",
-                                        onClick = { currentTab = "book" },
+                                        onClick = {
+                                            if (currentUserRole == "provider"){
+                                                showCreateService = true
+                                            } else {
+                                                currentTab="book"
+                                            }
+                                                  },
                                         icon = { Text("➕") },
-                                        label = { Text("Agendar") }
+                                        label = {
+                                            if (currentUserRole == "provider") {
+                                                Text("Nuevo servicio")
+                                            } else {
+                                                Text("Agendar")
+                                            }
+                                        }
                                     )
                                     NavigationBarItem(
                                         selected = currentTab == "tickets",
@@ -194,9 +243,14 @@ class MainActivity : ComponentActivity() {
                                             showProviderServices = true
                                         }
                                     )
-                                    "book" -> BookingScreen(onBookingSuccess = {
-                                        currentTab = "tickets"
-                                    })
+                                    "book" -> {
+                                        ClientServicesScreen(
+                                            onServiceClick = { serviceId ->
+                                                selectedServiceId = serviceId
+                                                showServiceDetail = true
+                                            }
+                                        )
+                                    }
                                     "tickets" -> MyTicketsScreen()
                                 }
                             }
