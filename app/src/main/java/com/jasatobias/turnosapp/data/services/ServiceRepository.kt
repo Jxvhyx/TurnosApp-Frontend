@@ -1,5 +1,6 @@
 package com.jasatobias.turnosapp.data.services
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -20,8 +21,8 @@ class ServiceRepository {
                 "description" to description,
                 "duration" to duration,
                 "available" to true,
-                "createdAt" to com.google.firebase.Timestamp.now(),
-                "updatedAt" to com.google.firebase.Timestamp.now()
+                "createdAt" to Timestamp.now(),
+                "updatedAt" to Timestamp.now()
             )
 
             firestore
@@ -122,7 +123,7 @@ class ServiceRepository {
                 "name" to name,
                 "description" to description,
                 "duration" to duration,
-                "updatedAt" to com.google.firebase.Timestamp.now()
+                "updatedAt" to Timestamp.now()
             )
 
             firestore
@@ -144,7 +145,7 @@ class ServiceRepository {
         return try {
             val serviceData = hashMapOf<String, Any>(
                 "available" to available,
-                "updatedAt" to com.google.firebase.Timestamp.now()
+                "updatedAt" to Timestamp.now()
             )
 
             firestore

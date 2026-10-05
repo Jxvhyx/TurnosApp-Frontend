@@ -33,4 +33,28 @@ class UserRepository {
             Result.failure(e)
         }
     }
+
+    suspend fun getUser(
+        userId: String
+    ): Result<Map<String, Any>> {
+        return try {
+
+            val document = firestore
+                .collection("Users")
+                .document(userId)
+                .get()
+                .await()
+
+            if (!document.exists()) {
+                throw Exception("No se encontró el usuario")
+            }
+
+            Result.success(
+                document.data ?: emptyMap()
+            )
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

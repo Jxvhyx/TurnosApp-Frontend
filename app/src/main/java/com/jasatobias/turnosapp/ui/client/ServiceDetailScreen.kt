@@ -34,7 +34,12 @@ import com.jasatobias.turnosapp.ui.theme.RoyalBlue
 fun ServiceDetailScreen(
     serviceId: String,
     onBack: () -> Unit,
-    onBookService: () -> Unit
+    onBookService: (
+        serviceId: String,
+        providerId: String,
+        serviceName: String,
+        duration: Int
+            ) -> Unit
 ) {
 
     val serviceRepository = remember {
@@ -145,6 +150,7 @@ fun ServiceDetailScreen(
         } else if (service != null) {
 
             ServiceDetailContent(
+                serviceId = serviceId,
                 service = service!!,
                 provider = provider,
                 onBack = onBack,
@@ -156,10 +162,16 @@ fun ServiceDetailScreen(
 
 @Composable
 private fun ServiceDetailContent(
+    serviceId: String,
     service: Map<String, Any>,
     provider: Map<String, Any>?,
     onBack: () -> Unit,
-    onBookService: () -> Unit
+    onBookService: (
+        serviceId: String,
+        providerId: String,
+        serviceName: String,
+        duration: Int
+    ) -> Unit
 ) {
 
     val name =
@@ -305,7 +317,20 @@ private fun ServiceDetailContent(
             )
 
             androidx.compose.material3.Button(
-                onClick = onBookService,
+                onClick = {
+                    val providerId =
+                        service["providerId"] as? String
+
+                    if (!providerId.isNullOrBlank()) {
+
+                        onBookService(
+                            serviceId,
+                            providerId,
+                            name,
+                            duration
+                        )
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp),

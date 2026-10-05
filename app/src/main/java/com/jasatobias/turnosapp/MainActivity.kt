@@ -13,8 +13,9 @@ import androidx.compose.ui.Modifier
 import com.jasatobias.turnosapp.data.auth.AuthRepository
 import com.jasatobias.turnosapp.data.users.UserRepository
 import com.jasatobias.turnosapp.ui.HomeScreenGeneral
+import com.jasatobias.turnosapp.ui.appointment.AppointmentBookingScreen
 import com.jasatobias.turnosapp.ui.auth.LoginScreen
-import com.jasatobias.turnosapp.ui.MyTicketsScreen
+import com.jasatobias.turnosapp.ui.appointment.MyTicketsScreen
 import com.jasatobias.turnosapp.ui.auth.ProviderProfileScreen
 import com.jasatobias.turnosapp.ui.auth.RegisterScreen
 import com.jasatobias.turnosapp.ui.client.ClientServicesScreen
@@ -38,8 +39,10 @@ class MainActivity : ComponentActivity() {
                 var currentUserRole by remember { mutableStateOf<String?>(null) }
 
                 var showRegister by remember { mutableStateOf(false) }
+
                 var showProviderProfile by remember { mutableStateOf(false) }
                 var showEditProviderProfile by remember { mutableStateOf(false) }
+
                 var showCreateService by remember { mutableStateOf(false) }
                 var showProviderServices by remember { mutableStateOf(false) }
                 var showEditService by remember { mutableStateOf(false) }
@@ -47,6 +50,12 @@ class MainActivity : ComponentActivity() {
                 var showClientServices by remember { mutableStateOf(false) }
                 var showServiceDetail by remember { mutableStateOf(false) }
                 var selectedServiceId by remember { mutableStateOf<String?>(null) }
+
+                var showAppointmentBooking by remember { mutableStateOf(false) }
+                var bookingServiceId by remember { mutableStateOf<String?>(null) }
+                var bookingProviderId by remember { mutableStateOf<String?>(null) }
+                var bookingServiceName by remember { mutableStateOf("") }
+                var bookingDuration by remember { mutableStateOf(0) }
 
                 var currentTab by remember { mutableStateOf("home") }
                 var servicesRefreshKey by remember { mutableIntStateOf(0) }
@@ -176,7 +185,44 @@ class MainActivity : ComponentActivity() {
                                     selectedServiceId = null
                                     showClientServices = true
                                 },
-                                onBookService = {}
+                                onBookService = { id, providerId, serviceName, duration ->
+
+                                    bookingServiceId = id
+                                    bookingProviderId = providerId
+                                    bookingServiceName = serviceName
+                                    bookingDuration = duration
+
+                                    showServiceDetail = false
+                                    showAppointmentBooking = true
+                                }
+                            )
+                        }
+                    } else if (showAppointmentBooking) {
+
+                        val serviceId = bookingServiceId
+                        val providerId = bookingProviderId
+
+                        if (serviceId != null && providerId != null) {
+
+                            AppointmentBookingScreen(
+                                serviceId = serviceId,
+                                providerId = providerId,
+                                serviceName = bookingServiceName,
+                                duration = bookingDuration,
+
+                                onBack = {
+                                    showAppointmentBooking = false
+                                    showServiceDetail = true
+                                },
+
+                                onAppointmentCreated = {
+
+                                    showAppointmentBooking = false
+                                    showServiceDetail = false
+                                    selectedServiceId = null
+
+                                    currentTab = "tickets"
+                                }
                             )
                         }
                     }
@@ -251,7 +297,7 @@ class MainActivity : ComponentActivity() {
                                             }
                                         )
                                     }
-                                    "tickets" -> MyTicketsScreen()
+                                    "tickets" -> MyTicketsScreen(userRole = currentUserRole ?: "client")
                                 }
                             }
                         }
