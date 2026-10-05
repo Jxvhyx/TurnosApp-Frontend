@@ -1,4 +1,4 @@
-package com.jasatobias.turnosapp
+package com.jasatobias.turnosapp.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,8 +13,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jasatobias.turnosapp.ui.theme.NavyBackground
-import com.jasatobias.turnosapp.ui.theme.RoyalBlue
-import com.jasatobias.turnosapp.ui.theme.LightSurface
 import com.jasatobias.turnosapp.ui.theme.CardBlue
 
 @Composable

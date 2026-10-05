@@ -1,4 +1,4 @@
-package com.jasatobias.turnosapp
+package com.jasatobias.turnosapp.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,7 +33,8 @@ import com.jasatobias.turnosapp.ui.theme.*
 fun HomeScreenGeneral(
     onNavigateToTab: (String) -> Unit,
     onLogout: () -> Unit,
-    onEditProviderProfile: () -> Unit
+    onEditProviderProfile: () -> Unit,
+    onProviderServices: () -> Unit
 ) {
     val drawerState = rememberDrawerState(
         initialValue = DrawerValue.Closed
@@ -151,21 +152,6 @@ fun HomeScreenGeneral(
                     Spacer(
                         modifier = Modifier.height(10.dp)
                     )
-
-                    /*NavigationDrawerItem(
-                        icon = {
-                            Text("👤")
-                        },
-                        label = {
-                            Text("Mi información")
-                        },
-                        selected = false,
-                        onClick = {
-                            scope.launch {
-                                drawerState.close()
-                            }
-                        }
-                    ) */
 
                     if (userRole == "provider") {
 
@@ -338,8 +324,28 @@ fun HomeScreenGeneral(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        QuickActionItem("➕", "Nuevo Turno") { onNavigateToTab("book") }
-                        QuickActionItem("📋", "Mis Turnos") { onNavigateToTab("tickets") }
+                        if (userRole == "provider"){
+
+                            QuickActionItem(
+                                icon = "🛠️",
+                                label = "Mis servicios",
+                                onClick = {
+                                    onProviderServices()
+                                }
+                            )
+
+                        } else{
+
+                            QuickActionItem(
+                                "➕",
+                                "Nuevo Turno"
+                            ) { onNavigateToTab("book") }
+
+                            QuickActionItem(
+                                "📋",
+                                "Mis Turnos"
+                            ) { onNavigateToTab("tickets") }
+                        }
                         QuickActionItem("🏢", "Sucursales") { /* Acción futura */ }
                         QuickActionItem("⚙️", "Ajustes") { /* Acción futura */ }
                     }

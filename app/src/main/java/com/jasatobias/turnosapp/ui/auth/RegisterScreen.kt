@@ -1,4 +1,4 @@
-package com.jasatobias.turnosapp
+package com.jasatobias.turnosapp.ui.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

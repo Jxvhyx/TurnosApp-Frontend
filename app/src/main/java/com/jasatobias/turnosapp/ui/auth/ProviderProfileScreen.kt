@@ -1,4 +1,4 @@
-package com.jasatobias.turnosapp
+package com.jasatobias.turnosapp.ui.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,13 +13,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.jasatobias.turnosapp.data.providers.ProviderRepository
 
 import com.jasatobias.turnosapp.ui.theme.NavyBackground
 import com.jasatobias.turnosapp.ui.theme.RoyalBlue
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 @Composable
 fun ProviderProfileScreen(
