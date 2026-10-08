@@ -23,6 +23,10 @@ import com.jasatobias.turnosapp.ui.client.ServiceDetailScreen
 import com.jasatobias.turnosapp.ui.services.CreateServiceScreen
 import com.jasatobias.turnosapp.ui.services.EditServiceScreen
 import com.jasatobias.turnosapp.ui.services.ProviderServicesScreen
+<<<<<<< HEAD
+import com.jasatobias.turnosapp.ui.screens.HelpChatScreen // <-- Importa tu pantalla de ayuda
+=======
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
 
 import com.jasatobias.turnosapp.ui.theme.TurnosAppTheme
 
@@ -118,7 +122,10 @@ class MainActivity : ComponentActivity() {
                     } else if (showCreateService) {
 
                         CreateServiceScreen(
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                             onServiceCreated = {
                                 showCreateService = false
                                 servicesRefreshKey++
@@ -133,30 +140,48 @@ class MainActivity : ComponentActivity() {
                         val service = selectedService
 
                         if (service != null) {
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                             EditServiceScreen(
                                 serviceId = service["id"] as? String ?: "",
                                 currentName = service["name"] as? String ?: "",
                                 currentDescription = service["description"] as? String ?: "",
                                 currentDuration = (service["duration"] as? Number)?.toLong() ?: 0L,
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                                 onServiceUpdated = {
                                     showEditService = false
                                     selectedService = null
                                     servicesRefreshKey++
                                 },
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                                 onBack = {
                                     showEditService = false
                                     selectedService = null
                                 }
                             )
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                         }
 
                     } else if (showProviderServices) {
 
                         ProviderServicesScreen(
+<<<<<<< HEAD
+                            refreshKey = servicesRefreshKey,
+                            onCreateService = {
+                                showCreateService = true
+                            },
+=======
 
                             refreshKey = servicesRefreshKey,
 
@@ -164,11 +189,15 @@ class MainActivity : ComponentActivity() {
                                 showCreateService = true
                             },
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                             onEditService = { service ->
                                 selectedService = service
                                 showEditService = true
                             },
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                             onBack = {
                                 showProviderServices = false
                             }
@@ -186,7 +215,10 @@ class MainActivity : ComponentActivity() {
                                     showClientServices = true
                                 },
                                 onBookService = { id, providerId, serviceName, duration ->
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                                     bookingServiceId = id
                                     bookingProviderId = providerId
                                     bookingServiceName = serviceName
@@ -203,17 +235,29 @@ class MainActivity : ComponentActivity() {
                         val providerId = bookingProviderId
 
                         if (serviceId != null && providerId != null) {
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                             AppointmentBookingScreen(
                                 serviceId = serviceId,
                                 providerId = providerId,
                                 serviceName = bookingServiceName,
                                 duration = bookingDuration,
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                                 onBack = {
                                     showAppointmentBooking = false
                                     showServiceDetail = true
                                 },
+<<<<<<< HEAD
+                                onAppointmentCreated = {
+                                    showAppointmentBooking = false
+                                    showServiceDetail = false
+                                    selectedServiceId = null
+=======
 
                                 onAppointmentCreated = {
 
@@ -221,6 +265,7 @@ class MainActivity : ComponentActivity() {
                                     showServiceDetail = false
                                     selectedServiceId = null
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                                     currentTab = "tickets"
                                 }
                             )
@@ -244,9 +289,15 @@ class MainActivity : ComponentActivity() {
                                             if (currentUserRole == "provider"){
                                                 showCreateService = true
                                             } else {
+<<<<<<< HEAD
+                                                currentTab = "book"
+                                            }
+                                        },
+=======
                                                 currentTab="book"
                                             }
                                                   },
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                                         icon = { Text("➕") },
                                         label = {
                                             if (currentUserRole == "provider") {
@@ -262,6 +313,16 @@ class MainActivity : ComponentActivity() {
                                         icon = { Text("📋") },
                                         label = { Text("Mis Turnos") }
                                     )
+<<<<<<< HEAD
+                                    // NUEVO BOTÓN DE AYUDA / FAQ EN LA BARRA INFERIOR
+                                    NavigationBarItem(
+                                        selected = currentTab == "help",
+                                        onClick = { currentTab = "help" },
+                                        icon = { Text("❓") },
+                                        label = { Text("Ayuda") }
+                                    )
+=======
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                                 }
                             }
                         ) { innerPadding ->
@@ -298,6 +359,10 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }
                                     "tickets" -> MyTicketsScreen(userRole = currentUserRole ?: "client")
+<<<<<<< HEAD
+                                    "help" -> HelpChatScreen() // NUEVA PANTALLA CARGADA AQUÍ
+=======
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
                                 }
                             }
                         }

@@ -2,10 +2,24 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+<<<<<<< HEAD
+    alias(libs.plugins.kotlin.android)
+=======
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
 }
 
 android {
     namespace = "com.jasatobias.turnosapp"
+<<<<<<< HEAD
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "com.jasatobias.turnosapp"
+        minSdk = 26
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
+=======
     compileSdk {
         version = release(37)
     }
@@ -17,14 +31,23 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
+<<<<<<< HEAD
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+=======
             optimization {
                 enable = false
             }
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
         }
     }
     compileOptions {
@@ -34,6 +57,12 @@ android {
     buildFeatures {
         compose = true
     }
+<<<<<<< HEAD
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+=======
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
 }
 
 dependencies {
@@ -58,4 +87,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+<<<<<<< HEAD
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+=======
+>>>>>>> 1568a8635dec4abfb33c9d264cab7cb31673fe40
 }
